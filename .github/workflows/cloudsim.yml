@@ -1,4 +1,4 @@
-name: Compile and Run CloudSim
+name: Compile and Run CloudSim 
 
 on:
   push:
@@ -18,10 +18,11 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Compile CloudSimExample2
+    - name: Compile all CloudSim source files
       run: |
         mkdir -p out
-        javac -d out examples/org/cloudbus/cloudsim/examples/CloudSimExample2.java
+        find . -name "*.java" > sources.txt
+        javac -d out @sources.txt
 
     - name: Run CloudSimExample2
       run: |
