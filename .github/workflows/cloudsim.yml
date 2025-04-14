@@ -7,32 +7,39 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build:
+  build-and-run:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-    
+
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
         java-version: '8'
         distribution: 'temurin'
-    
+
     - name: Create build directory
       run: mkdir -p build
-    
-    - name: Compile Java code
+
+    - name: Compile CloudSim Example Java files
       run: |
         javac -d build -cp "jars/cloudsim-3.0.3.jar:jars/cloudsim-examples-3.0.3.jar" examples/org/cloudbus/cloudsim/examples/*.java
-    
+
     - name: Run CloudSimExample2
       run: |
         java -cp "build:jars/cloudsim-3.0.3.jar:jars/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.examples.CloudSimExample2
-      
-    - name: Archive build artifacts
-      uses: actions/upload-artifact@v3
+
+    - name: Upload Compiled Classes
+      uses: actions/upload-artifact@v2.3.1
       with:
-        name: CloudSim-classes
-        path: build/**/*.class  
+        name: compiled-cloudsim-classes
+        path: build/**/*.class
+
+    - name: Generate Summary
+      run: |
+        echo "## CloudSim CI Summary" > $GITHUB_STEP_SUMMARY
+        echo "### CloudSimExample2 Executed Successfully" >> $GITHUB_STEP_SUMMARY
+        echo "Compiled class files have been uploaded as artifacts." >> $GITHUB_STEP_SUMMARY
+        echo "Refer to build logs and artifacts for further details." >> $GITHUB_STEP_SUMMARY
