@@ -1,0 +1,28 @@
+name: Compile and Run CloudSim
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  compile-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Compile CloudSimExample2
+      run: |
+        mkdir -p out
+        javac -d out examples/org/cloudbus/cloudsim/examples/CloudSimExample2.java
+
+    - name: Run CloudSimExample2
+      run: |
+        java -cp out org.cloudbus.cloudsim.examples.CloudSimExample2
