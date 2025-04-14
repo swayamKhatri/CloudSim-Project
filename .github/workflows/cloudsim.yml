@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up JDK 8
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '8'
         distribution: 'temurin'
@@ -26,12 +26,28 @@ jobs:
       run: |
         javac -d build -cp "jars/cloudsim-3.0.3.jar:jars/cloudsim-examples-3.0.3.jar" examples/org/cloudbus/cloudsim/examples/*.java
     
-    - name: Run CloudSimExample2
+    - name: Run tests
       run: |
+        echo "Running CloudSimExample2"
         java -cp "build:jars/cloudsim-3.0.3.jar:jars/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.examples.CloudSimExample2
+        echo "Running CloudSimExample3"
+        java -cp "build:jars/cloudsim-3.0.3.jar:jars/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.examples.CloudSimExample3
+        echo "Running CloudSimExample4"
+        java -cp "build:jars/cloudsim-3.0.3.jar:jars/cloudsim-examples-3.0.3.jar" org.cloudbus.cloudsim.examples.CloudSimExample4
       
     - name: Archive build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: CloudSim-classes
         path: build/**/*.class
+        
+    - name: Package JAR
+      run: |
+        mkdir -p dist
+        jar -cf dist/cloudsim-examples-custom.jar -C build .
+        
+    - name: Upload JAR
+      uses: actions/upload-artifact@v4
+      with:
+        name: CloudSim-jar
+        path: dist/*.jar
