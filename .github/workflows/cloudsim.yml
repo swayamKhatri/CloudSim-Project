@@ -35,4 +35,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: CloudSim-classes
-        path: build/**/*.class
+        path: build/**/*.class  
